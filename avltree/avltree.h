@@ -12,15 +12,48 @@ template<typename T>
 class node
 {
     public:
-        T data;
-        node<T>* parent;
-        node<T>* left;
-        node<T>* right;
+        /*
+         *T data;
+         *node<T>* parent;
+         *node<T>* left;
+         *node<T>* right;
+         */
         node(T d = T(), 
                 node<T> *parent = NULL,
                 node<T> *left = NULL,
                 node<T> *right = NULL): data(d), parent(parent),left(left),right(right){}
+
+    private:
+        T data;
+    public:
+        node<T>* parent;
+        node<T>* left;
+        node<T>* right;
+
+    public:
+        T&         getData();
+        void       setData(const T& data);
+        /*
+         *node<T>*   getParent();
+         *bool       setParent(node<T>* p);
+         *node<T>*   getLeft();
+         *bool       setLeft(node<T>* p);
+         *node<T>*   getRight();
+         *bool       setRight(node<T>* p);
+         */
 };
+
+template<typename T>
+inline T& node<T>::getData()
+{
+    return data;
+}
+
+template<typename T>
+inline void node<T>::setData(const T& tmp)
+{
+    data = tmp;
+}
 
 template<typename T>
 class avltree 
@@ -184,14 +217,16 @@ inline node<T>* avltree<T>::Insert(node<T> *p, T data)
     if(p == NULL)
     {
         p = new node<T>;
-        p->data   = data;
+        p->setData(data);
+//        p->data   = data;
         p->parent = NULL;
         p->left   = NULL;
         p->right  = NULL;
         if(m_pRootNode == NULL)
             m_pRootNode = p;
     }
-    else if(p->data > data)
+//    else if(p->data > data)
+    else if(p->getData() > data)
     {
 //        Insert(p->left, data);
         p->left = Insert(p->left, data);
@@ -200,7 +235,8 @@ inline node<T>* avltree<T>::Insert(node<T> *p, T data)
             p->left->parent = p;
         if(Height(p->left) - Height(p->right) == 2)
         {
-            if(p->left->data > data)
+//            if(p->left->data > data)
+            if(p->left->getData() > data)
                 p = LeftLeft(p);
             else
                 p = LeftRight(p);
@@ -214,7 +250,8 @@ inline node<T>* avltree<T>::Insert(node<T> *p, T data)
             p->right->parent = p;
         if(Height(p->left) - Height(p->right) == -2)
         {
-            if(p->right->data > data)
+//            if(p->right->data > data)
+            if(p->right->getData() > data)
                 p = RightLeft(p);
             else
                 p = RightRight(p);
@@ -256,11 +293,13 @@ inline int avltree<T>::Delete(node<T>* p, T data)
 {
     if(p == NULL)
         return -1;
-    else if(p->data > data)
+//    else if(p->data > data)
+    else if(p->getData() > data)
     {
         Delete(p->left);
     }
-    else if(p->data < data)
+//    else if(p->data < data)
+    else if(p->getData < data)
     {
         Delete(p->right);
     }
@@ -271,13 +310,15 @@ inline int avltree<T>::Delete(node<T>* p, T data)
             if(Height(p->left) > Height(p->right))
             {
                 node<T>* pMax = FindMax(p->left);
-                p->data = pMax->data;
+//                p->data = pMax->data;
+                p->setData(pMax->getData());
                 Delete(p->left, data);
             }
             else
             {
                 node<T>* pMin = FindMin(p->right);
-                p->data = pMin->data;
+//                p->data = pMin->data;
+                p->setData(pMin->getData());
                 Delete(p->right, data);
             }
         }
@@ -317,7 +358,8 @@ inline void avltree<T>::PreOrder(node<T> *p, void (*Visit)(const T &data))
 {
     if(p)
     {
-        Visit(p->data);
+//        Visit(p->data);
+        Visit(p->getData());
         PreOrder(p->left, Visit);
         PreOrder(p->right, Visit);
     }
@@ -335,7 +377,8 @@ inline void avltree<T>::InOrder(node<T> *p, void (*Visit)(const T &data))
     if(p)
     {
         InOrder(p->left, Visit);
-        Visit(p->data);
+//        Visit(p->data);
+        Visit(p->getData());
         InOrder(p->right, Visit);
     }
 }
@@ -353,7 +396,8 @@ inline void avltree<T>::PostOrder(node<T> *p, void (*Visit)(const T &data))
     {
         PostOrder(p->left, Visit);
         PostOrder(p->right, Visit);
-        Visit(p->data);
+//        Visit(p->data);
+        Visit(p->getData());
     }
 }
 #endif
